@@ -3,8 +3,6 @@ from asyncio import AbstractEventLoop
 from enum import Enum
 from typing import Iterable, Optional
 
-from rotel.helpers import response_splitter
-
 
 class RotelStatusException(Exception):
     pass
@@ -89,7 +87,7 @@ class RotelStatus:
                                                                                  self._config.max_volume))
 
 
-class RotelControlProtocol:
+class RotelController:
     """Encapsulates a protocol to communicate with Rotel RS232 V2 capable amps.
 
     This class uses asyncio to communicate with the amp. It is NOT thread-safe!
