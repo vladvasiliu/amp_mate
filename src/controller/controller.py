@@ -1,9 +1,70 @@
+from asyncio import Event
+from enum import Enum, auto
+from typing import Optional
+
+
+class ControllerException(Exception):
+    pass
+
+
+class ControllerStatusException(ControllerException):
+    pass
+
+
+class ControllerVolumeException(ControllerException):
+    pass
+
+
+class VolumeStatus:
+    """Holds volume related information"""
+    def __init__(self, value: Optional[int] = None, mute: Optional[int] = None):
+        self.value = value
+        self.mute = mute
+        self.changed = Event()
+
+    @property
+    def value(self) -> int:
+        return self._value
+
+    @value.setter
+    def value(self, value: int):
+        if value != self._value:
+            self._value = value
+            self.changed.set()
+
+    @property
+    def mute(self) -> Optional[bool]:
+        return self._mute
+
+    @mute.setter
+    def mute(self, value):
+        if self._mute != value:
+            self._mute = value
+            self.changed.set()
+
+
+class PlaybackState(Enum):
+    PLAYING = auto()
+    PAUSED = auto()
+    STOPPED = auto()
+    ERROR = auto()
+
+
+class PlaybackStatus:
+    def __init__(self, state: PlaybackState):
+        self.state = state
+
+
 class ControllerStatus:
     """Holds last known status of the controller
 
-    The controller is asynchronous,
-    so it's not possible to return the exact status of the device at the time of the function call.
+    This should only be modified by the controller
     """
+    def __init__(self,
+                 volume: Optional[VolumeStatus] = None,
+                 playback: Optional[PlaybackStatus] = None):
+        self.volume = volume
+        self.playback = playback
 
 
 class Controller:
@@ -15,8 +76,9 @@ class Controller:
     The controller is asynchronous,
     so it's not possible to return the exact status of the device at the time of the function call.
     The implementation should probably manage some sort of internal "cache" / last known good status.
-    """
 
+    Volume goes from min = 0 to max = 100
+    """
     async def __aenter__(self):
         raise NotImplementedError
 

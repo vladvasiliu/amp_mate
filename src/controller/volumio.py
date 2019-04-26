@@ -1,9 +1,16 @@
+import logging
 import socketio
+import pprint
 
-from . import Controller
+from .controller import Controller, ControllerStatus, VolumeStatus, ControllerVolumeException
+
+logger = logging.getLogger(__name__)
 
 
 class VolumioController(Controller):
+    min_vol = 0
+    max_vol = 100
+
     def __init__(self, host: str, port: int = 3000):
         self._host = host
         self._port = port
@@ -11,6 +18,7 @@ class VolumioController(Controller):
         self._sio.on('pushState', self.handle_push_state)
         self._sio.on('connect', self.handle_connect)
         self._sio.on('disconnect', self.handle_disconnect)
+        self.status = ControllerStatus(volume=VolumeStatus())
 
     async def connect(self):
         await self._sio.connect('%s:%s' % (self._host, self._port))
@@ -30,20 +38,26 @@ class VolumioController(Controller):
         await self.disconnect()
 
     def handle_push_state(self, state: dict):
-        print("got state from %s:" % self._host)
-        print(state)
+        logger.debug('Got state from %s: %s' % (self._host, pprint.pprint(state)))
+        self.status.volume.value = state['volume']
+        self.status.volume.mute = state['mute']
 
     def handle_connect(self):
-        print('Connected to %s' % self._host)
+        logger.info('Connected to %s' % self._host)
 
     def handle_disconnect(self):
-        print('Disconnected from %s' % self._host)
+        logger.info('Disconnected from %s' % self._host)
 
     async def get_volume(self) -> int:
         pass
 
     async def set_volume(self, value: int):
-        pass
+        if self.min_vol < value < self.max_vol:
+            await self._sio.emit('volume', value)
+        else:
+            message = 'Got invalid volume %s. Should be between %s and %s.' % (value, self.min_vol, self.max_vol)
+            logger.warning(message)
+            raise ControllerVolumeException(message)
 
     async def get_mute(self) -> bool:
         pass
