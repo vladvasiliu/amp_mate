@@ -18,7 +18,9 @@ class ControllerVolumeException(ControllerException):
 class VolumeStatus:
     """Holds volume related information"""
     def __init__(self, value: Optional[int] = None, mute: Optional[int] = None):
+        self._value = None
         self.value = value
+        self._mute = None
         self.mute = mute
         self.changed = Event()
 
