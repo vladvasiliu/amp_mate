@@ -2,7 +2,7 @@ import logging
 import socketio
 import pprint
 
-from .controller import Controller, ControllerStatus, VolumeStatus, ControllerVolumeException
+from . import Controller, ControllerStatus, VolumeStatus, ControllerVolumeException
 
 logger = logging.getLogger(__name__)
 
