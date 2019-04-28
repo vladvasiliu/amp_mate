@@ -40,4 +40,5 @@ async def tcp_echo_client():
     await writer.wait_closed()
 
 
-asyncio.run(tcp_echo_client())
+if __name__ == '__main__':
+    asyncio.run(tcp_echo_client())

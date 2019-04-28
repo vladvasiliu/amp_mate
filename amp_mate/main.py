@@ -1,7 +1,5 @@
 import asyncio
-
-from controller.volumio import VolumioController
-
+from controller import VolumioController
 
 if __name__ == '__main__':
     volumio = VolumioController('http://192.168.1.13', 3000)

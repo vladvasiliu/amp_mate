@@ -2,7 +2,7 @@ import logging
 import socketio
 import pprint
 
-from . import Controller, ControllerStatus, VolumeStatus, ControllerVolumeException
+from . import Controller, ControllerStatus, VolumeStatus
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +57,7 @@ class VolumioController(Controller):
         else:
             message = 'Got invalid volume %s. Should be between %s and %s.' % (value, self.min_vol, self.max_vol)
             logger.warning(message)
-            raise ControllerVolumeException(message)
+            raise ValueError(message)
 
     async def get_mute(self) -> bool:
         pass

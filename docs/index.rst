@@ -10,7 +10,7 @@ Welcome to Amp Mate's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-.. automodule:: controller
+   source/modules
 
 
 Indices and tables

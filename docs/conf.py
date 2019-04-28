@@ -10,9 +10,11 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import os
+import sys
+sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath('../'))
+sys.path.insert(0, os.path.abspath('../amp_mate'))
 
 
 # -- Project information -----------------------------------------------------
@@ -57,7 +59,7 @@ html_theme_options = {
     'github_repo': 'amp_mate',
     'analytics_id': 'UA-139152279-1',
     'badge_branch': 'master',
-    'code_cov': True,
+    'codecov_button': True,
     'github_button': True,
     'travis_button': True,
     'show_powered_by': True,

@@ -44,4 +44,5 @@ async def work():
         await vc.sio.wait()
 
 
-asyncio.run(work())
+if __name__ == '__main__':
+    asyncio.run(work())
