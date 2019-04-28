@@ -52,17 +52,10 @@ trim_footnote_reference_space = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = 'sphinx_rtd_theme'
 
 html_theme_options = {
-    'github_user': 'vladvasiliu',
-    'github_repo': 'amp_mate',
     'analytics_id': 'UA-139152279-1',
-    'badge_branch': 'master',
-    'codecov_button': True,
-    'github_button': True,
-    'travis_button': True,
-    'show_powered_by': True,
 }
 
 
@@ -77,6 +70,5 @@ html_static_path = ['_static']
 autodoc_default_options = {
     'member-order': 'bysource',
     'private-members': True,
-    'special-members': '__init__',
     'undoc-members': True,
 }
