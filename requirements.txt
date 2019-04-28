@@ -4,6 +4,14 @@
 #
 #    pip-compile -r -U
 #
+aiohttp==3.5.4            # via python-socketio
+async-timeout==3.0.1      # via aiohttp
+attrs==19.1.0             # via aiohttp
+chardet==3.0.4            # via aiohttp
+idna==2.8                 # via yarl
+multidict==4.5.2          # via aiohttp, yarl
 python-engineio==3.5.1    # via python-socketio
-python-socketio==4.0.1
+python-socketio[asyncio_client]==4.0.1
 six==1.12.0               # via python-engineio, python-socketio
+websockets==7.0           # via python-socketio
+yarl==1.3.0               # via aiohttp
