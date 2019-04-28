@@ -16,28 +16,31 @@ class ControllerStatusException(ControllerException):
 
 
 class VolumeStatus:
-    min_vol = 0
-    max_vol = 100
-    """Holds volume related information"""
-    def __init__(self, value: Optional[int] = None, mute: Optional[int] = None):
+    """Holds volume related information.
+
+    Attributes can be None if they're not yet known
+    """
+
+    MIN = 0
+    MAX = 100
+
+    def __init__(self):
         self._value = None
-        self.value = value
         self._mute = None
-        self.mute = mute
         self.changed = Event()
 
     @property
-    def value(self) -> int:
+    def value(self) -> Optional[int]:
         return self._value
 
     @value.setter
     def value(self, value: int):
-        if self.min_vol <= value <= self.max_vol:
+        if self.MIN <= value <= self.MAX:
             if value != self._value:
                 self._value = value
                 self.changed.set()
         else:
-            message = 'Got invalid volume %s. Should be between %s and %s.' % (value, self.min_vol, self.max_vol)
+            message = 'Got invalid volume "%s". Should be between %s and %s.' % (value, self.MIN, self.MAX)
             logger.warning(message)
             raise ValueError(message)
 
