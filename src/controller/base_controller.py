@@ -1,6 +1,10 @@
+import logging
 from asyncio import Event
 from enum import Enum, auto
 from typing import Optional
+
+
+logger = logging.getLogger(__name__)
 
 
 class ControllerException(Exception):
@@ -11,11 +15,9 @@ class ControllerStatusException(ControllerException):
     pass
 
 
-class ControllerVolumeException(ControllerException):
-    pass
-
-
 class VolumeStatus:
+    min_vol = 0
+    max_vol = 100
     """Holds volume related information"""
     def __init__(self, value: Optional[int] = None, mute: Optional[int] = None):
         self._value = None
@@ -30,9 +32,14 @@ class VolumeStatus:
 
     @value.setter
     def value(self, value: int):
-        if value != self._value:
-            self._value = value
-            self.changed.set()
+        if self.min_vol <= value <= self.max_vol:
+            if value != self._value:
+                self._value = value
+                self.changed.set()
+        else:
+            message = 'Got invalid volume %s. Should be between %s and %s.' % (value, self.min_vol, self.max_vol)
+            logger.warning(message)
+            raise ValueError(message)
 
     @property
     def mute(self) -> Optional[bool]:
