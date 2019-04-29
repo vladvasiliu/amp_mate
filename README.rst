@@ -19,7 +19,7 @@ This is supposed to be simple. The principle is that the player and the amplifie
 From a home automation standpoint, the combination of Player & Amp should be a single unit. The amp in this scenario is basically "dumb". **amp_mate** is the glue that binds the player to the amp.
 
 
-## Useful documentation
------------------------
-* [Volumio Websocket API](https://volumio.github.io/docs/Development_How_To/Overview.html)
-* [Rotel command reference](http://rotel.com/manuals-resources/rs232-protocols)
+Useful documentation
+--------------------
+* `Volumio Websocket API <https://volumio.github.io/docs/Development_How_To/Overview.html>`_
+* `Rotel command reference <http://rotel.com/manuals-resources/rs232-protocols>`_
