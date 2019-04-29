@@ -3,6 +3,7 @@ import os
 
 from controller import VolumioController
 
+
 if __name__ == '__main__':
     VOLUMIO_HOST = os.getenv('VOLUMIO_HOST')
 

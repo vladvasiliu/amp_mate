@@ -83,7 +83,7 @@ class Controller:
     """This is an interface to control remote devices, such as Amp or Player. It uses asyncio.
 
     Numeric values are normalised: 0 is min, 100 is max.
-    Implementation should handle conversion
+    Implementation should handle conversion to and from whatever values are actually used by the device.
 
     The controller is asynchronous,
     so it's not possible to return the exact status of the device at the time of the function call.
@@ -91,6 +91,12 @@ class Controller:
 
     Volume goes from min = 0 to max = 100
     """
+    async def connect(self):
+        raise NotImplementedError
+
+    async def disconnect(self):
+        raise NotImplementedError
+
     async def __aenter__(self):
         raise NotImplementedError
 
