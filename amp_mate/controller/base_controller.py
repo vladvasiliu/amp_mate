@@ -19,6 +19,7 @@ class VolumeStatus:
     """Holds volume related information.
 
     Attributes can be None if they're not yet known
+    If value is not an integer, it will be rounded to the closest one.
     """
 
     MIN = 0
@@ -37,7 +38,7 @@ class VolumeStatus:
     def value(self, value: int):
         if self.MIN <= value <= self.MAX:
             if value != self._value:
-                self._value = value
+                self._value = round(value)
                 self.changed.set()
         else:
             message = 'Got invalid volume "%s". Should be between %s and %s.' % (value, self.MIN, self.MAX)
