@@ -1,8 +1,12 @@
 import asyncio
+import os
+
 from controller import VolumioController
 
 if __name__ == '__main__':
-    volumio = VolumioController('http://192.168.1.13', 3000)
+    VOLUMIO_HOST = os.getenv('VOLUMIO_HOST')
+
+    volumio = VolumioController(VOLUMIO_HOST, 3000)
 
     loop = asyncio.get_event_loop()
 
