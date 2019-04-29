@@ -1,6 +1,6 @@
 import unittest
 
-from controller import VolumeStatus
+from amp_mate.controller import VolumeStatus
 
 
 class TestVolumeStatus(unittest.TestCase):
