@@ -21,6 +21,7 @@ class VolumioController(Controller):
         self.status = ControllerStatus(volume=VolumeStatus())
 
     async def connect(self):
+        logger.debug('Attempting connection to %s:%s' % (self._host, self._port))
         await self._sio.connect('%s:%s' % (self._host, self._port))
         await self._get_state()
 
