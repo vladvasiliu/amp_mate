@@ -1,6 +1,13 @@
+import asyncio
+import logging
+import os
+import threading
 from typing import Iterable
 
-from controller import Controller
+from controller import Controller, VolumioController
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 
 class Master:
@@ -10,18 +17,42 @@ class Master:
     """
     def __init__(self, controllers: Iterable[Controller]):
         self._controllers = controllers
+        self.loop = asyncio.get_event_loop()
+        self._async_runner = None
 
-    async def __aenter__(self):
-        self.connect()
+    def __enter__(self):
+        self.run()
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        self.disconnect()
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.stop()
 
-    def connect(self):
+    async def _connect(self):
+        logger.debug('Starting master.')
         for c in self._controllers:
-            c.connect()
+            await c.connect()
 
-    def disconnect(self):
+    async def _disconnect(self):
+        logger.info('Stopping master')
         for c in self._controllers:
-            c.disconnect()
+            await c.disconnect()
+
+    def run(self):
+        self.loop.run_until_complete(self._connect())
+        self.loop.run_forever()
+
+    def stop(self):
+        logger.info('Stopping master (got ^C).')
+        self.loop.run_until_complete(self._disconnect())
+        self.loop.stop()
+
+
+if __name__ == '__main__':
+    VOLUMIO_HOST = os.getenv('VOLUMIO_HOST')
+    volumio = VolumioController(VOLUMIO_HOST, 3000)
+
+    master = Master([volumio])
+    try:
+        master.run()
+    except KeyboardInterrupt:
+        master.stop()
