@@ -6,5 +6,7 @@ amp_mate
 
    controller
    main
+   master
    rotel_io
+   simulators
    volumio
