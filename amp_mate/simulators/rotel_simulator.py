@@ -1,3 +1,6 @@
+from typing import Optional
+
+
 class RA1572:
     """Simulates a Rotel RA-1572 v2.65 and newer amplifier. Not all functions are implemented.
 
@@ -31,17 +34,14 @@ class RA1572:
 
     @property
     def power(self):
-        if self._power:
-            return "on"
-        else:
-            return "standby"
+        return "on" if self._power else "standby"
 
     @power.setter
     def power(self, value: str):
         if value == 'on':
             self._power = True
         elif value == 'off':
-            self._power = True
+            self._power = False
         elif value == 'toggle':
             self._power = not self._power
         else:
@@ -63,3 +63,19 @@ class RA1572:
             self._volume = int(value)
         else:
             raise ValueError('Unknown volume %s' % value)
+
+    @property
+    def mute(self):
+        return "on" if self._mute else "off"
+
+    @mute.setter
+    def mute(self, value:Optional[str]=None):
+        """Set mute state. If value is None, toggle mute."""
+        if value is 'on':
+            self._mute = True
+        elif value is 'off':
+            self._mute = False
+        elif value is None:
+            self._mute = not self._mute
+        else:
+            raise ValueError('Unknown mute state %s' % value)
