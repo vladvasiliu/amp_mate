@@ -2,6 +2,10 @@
   <dictionary name="vlad">
     <words>
       <w>asyncio</w>
+      <w>bluetooth</w>
+      <w>pcusb</w>
+      <w>phono</w>
+      <w>rotel</w>
       <w>volumio</w>
     </words>
   </dictionary>
