@@ -96,3 +96,28 @@ class TestRA1572Mute(TestCase):
                 self.amp._mute = not value[0]
                 self.amp.mute = None
                 self.assertEqual(self.amp.mute, value[1])
+
+
+class TestRA1572AutoUpdate(TestCase):
+    def setUp(self) -> None:
+        self.amp = RA1572()
+
+    def test_raises_for_wrong_state(self):
+        with self.assertRaises(ValueError):
+            self.amp.auto_update = 'something'
+
+    def test_on_off(self):
+        update_dict = {True: 'on',
+                       False: 'off'}
+        for state in update_dict.items():
+            with self.subTest(value=state[1]):
+                self.amp.auto_update = state[1]
+                self.assertIs(self.amp._auto_update, state[0])
+
+    def test_returns_auto_or_manual(self):
+        update_dict = {True: 'auto',
+                       False: 'manual'}
+        for value in update_dict.items():
+            with self.subTest(value=value[1]):
+                self.amp._auto_update = value[0]
+                self.assertEqual(self.amp.auto_update, value[1])

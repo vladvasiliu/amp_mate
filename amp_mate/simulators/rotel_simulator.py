@@ -15,12 +15,12 @@ class RA1572:
     BAL_MAX = 15
     DIM_MIN = 0
     DIM_MAX = 6
-    INPUTS = ["cd", "aux", "tuner", "phono", "bal_xlr",
-              "coax1", "coax2", "opt1", "opt2", "usb", "bluetooth", "pcusb"]
+    SOURCES = ["cd", "aux", "tuner", "phono", "bal_xlr",
+               "coax1", "coax2", "opt1", "opt2", "usb", "bluetooth", "pcusb"]
 
     def __init__(self):
         self._power = True
-        self._input = "cd"
+        self._source = "cd"
         self._volume = 0
         self._mute = False
         self._bypass = True
@@ -79,3 +79,27 @@ class RA1572:
             self._mute = not self._mute
         else:
             raise ValueError('Unknown mute state %s' % value)
+
+    @property
+    def source(self):
+        return self._source
+
+    @source.setter
+    def source(self, value: str):
+        if value in self.SOURCES:
+            self._source = value
+        else:
+            raise ValueError("Unknown source %s" % value)
+
+    @property
+    def auto_update(self):
+        return 'auto' if self._auto_update else 'manual'
+
+    @auto_update.setter
+    def auto_update(self, value: str):
+        if value is 'on':
+            self._auto_update = True
+        elif value is 'off':
+            self._auto_update = False
+        else:
+            raise ValueError("Unknown auto update mode %s" % value)
