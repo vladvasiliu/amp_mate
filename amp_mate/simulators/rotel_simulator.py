@@ -130,7 +130,11 @@ class RA1572:
         try:
             prop = self.COMMANDS[cmd]
         except KeyError:
-            raise ValueError('Unknown command %s' % cmd)
+            if not arg and cmd in self.SOURCES:
+                arg = cmd
+                prop = 'source'
+            else:
+                raise ValueError('Unknown command %s' % cmd)
         setattr(self, prop, arg)
         if self._auto_update:
             return getattr(self, prop)

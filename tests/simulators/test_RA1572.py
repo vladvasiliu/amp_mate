@@ -152,6 +152,28 @@ class TestRA1572Command(TestCase):
     def test_raises_for_wrong_command(self):
         self.assertRaises(ValueError, self.amp.command, 'toto')
 
+    def test_returns_string_if_auto_update_is_on(self):
+        commands = [('power', 'on'),
+                    ('vol', 'up'),
+                    ('mute', None),
+                    ('opt1', None)]
+        self.amp.auto_update = 'on'
+        for value in commands:
+            with self.subTest(value=value):
+                result = self.amp.command(*value)
+                self.assertIsInstance(result, str)
+
+    def test_returns_none_if_auto_update_is_off(self):
+        commands = [('power', 'on'),
+                    ('vol', 'up'),
+                    ('mute', None),
+                    ('opt1', None)]
+        self.amp.auto_update = 'off'
+        for value in commands:
+            with self.subTest(value=value):
+                result = self.amp.command(*value)
+                self.assertIsNone(result)
+
 
 class TestRA1572Request(TestCase):
     def setUp(self) -> None:
