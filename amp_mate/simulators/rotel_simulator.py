@@ -56,7 +56,7 @@ class RA1572:
 
     @property
     def power(self):
-        return "on" if self._power else "standby"
+        return "power=%s" % ("on" if self._power else "standby")
 
     @power.setter
     def power(self, value: str):
@@ -71,7 +71,7 @@ class RA1572:
 
     @property
     def volume(self):
-        return "%02i" % self._volume
+        return "volume=%02i" % self._volume
 
     @volume.setter
     def volume(self, value: str):
@@ -88,7 +88,7 @@ class RA1572:
 
     @property
     def mute(self):
-        return "on" if self._mute else "off"
+        return "mute=%s" % ("on" if self._mute else "off")
 
     @mute.setter
     def mute(self, value: Optional[str] = None):
@@ -104,7 +104,7 @@ class RA1572:
 
     @property
     def source(self):
-        return self._source
+        return 'source=%s' % self._source
 
     @source.setter
     def source(self, value: str):
@@ -115,7 +115,7 @@ class RA1572:
 
     @property
     def auto_update(self):
-        return 'auto' if self._auto_update else 'manual'
+        return 'update_mode=%s' % ('auto' if self._auto_update else 'manual')
 
     @auto_update.setter
     def auto_update(self, value: str):

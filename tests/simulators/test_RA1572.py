@@ -20,8 +20,8 @@ class TestRA1572Power(TestCase):
                 self.assertIs(self.amp._power, state[0])
 
     def test_toggle(self):
-        power_dict = {True: "on",
-                      False: "standby"}
+        power_dict = {True: "power=on",
+                      False: "power=standby"}
         for state in power_dict.items():
             with self.subTest(value=state[1]):
                 self.amp._power = not state[0]
@@ -29,8 +29,8 @@ class TestRA1572Power(TestCase):
                 self.assertEqual(self.amp.power, state[1])
 
     def test_returns_standby_or_on(self):
-        power_dict = {True: "on",
-                      False: "standby"}
+        power_dict = {True: "power=on",
+                      False: "power=standby"}
         for value in power_dict:
             with self.subTest(value=value):
                 self.amp._power = value
@@ -65,14 +65,14 @@ class TestRA1572Volume(TestCase):
         for value in [0, 2, 20]:
             with self.subTest(value=value):
                 self.amp._volume = value
-                self.assertEqual(self.amp.volume, "%02i" % value)
+                self.assertEqual(self.amp.volume, "volume=%02i" % value)
 
     def test_volume_is_set(self):
         # volume = 0 is illegal
         for vol in range (self.amp.VOL_MIN+1, self.amp.VOL_MAX + 1):
             with self.subTest(value=vol):
                 self.amp.volume = str(vol)
-                self.assertEqual(self.amp.volume, "%02i" % vol)
+                self.assertEqual(self.amp.volume, "volume=%02i" % vol)
 
 
 class TestRA1572Mute(TestCase):
@@ -95,14 +95,14 @@ class TestRA1572Mute(TestCase):
         for value in self.mute_dict.items():
             with self.subTest(value=value[1]):
                 self.amp._mute = value[0]
-                self.assertEqual(self.amp.mute, value[1])
+                self.assertEqual(self.amp.mute, "mute=%s" % value[1])
 
     def test_toggle(self):
         for value in self.mute_dict.items():
             with self.subTest(value=value[1]):
                 self.amp._mute = not value[0]
                 self.amp.mute = None
-                self.assertEqual(self.amp.mute, value[1])
+                self.assertEqual(self.amp.mute, "mute=%s" % value[1])
 
 
 class TestRA1572AutoUpdate(TestCase):
@@ -127,7 +127,7 @@ class TestRA1572AutoUpdate(TestCase):
         for value in update_dict.items():
             with self.subTest(value=value[1]):
                 self.amp._auto_update = value[0]
-                self.assertEqual(self.amp.auto_update, value[1])
+                self.assertEqual(self.amp.auto_update, "update_mode=%s" % value[1])
 
 
 class TestRA1572Source(TestCase):
@@ -142,7 +142,7 @@ class TestRA1572Source(TestCase):
         for src in self.amp.SOURCES:
             with self.subTest(value=src):
                 self.amp.source = src
-                self.assertEqual(self.amp.source, src)
+                self.assertEqual(self.amp.source, "source=%s" % src)
 
 
 class TestRA1572Command(TestCase):
@@ -161,7 +161,8 @@ class TestRA1572Command(TestCase):
         for value in commands:
             with self.subTest(value=value):
                 result = self.amp.command(*value)
-                self.assertIsInstance(result, str)
+                regex = r'^[a-z_]+=[a-z0-9_]+$'
+                self.assertRegex(result, regex)
 
     def test_returns_none_if_auto_update_is_off(self):
         commands = [('power', 'on'),
