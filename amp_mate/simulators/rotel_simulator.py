@@ -157,7 +157,11 @@ class RA1572:
         If the command is a setter, the function only returns if auto_update is True and if the function returns
         something.
         """
-        pattern = re.compile(r'^(?:(?P<command>[a-z0-9]+)(?:_(?P<arg>[a-z0-9\-+]+))?!)|(?:(?P<request>[a-z]+)\?)$')
+        cmd_pattern = r'^(?:(?P<command>[a-z0-9]+)(?:_(?P<arg>[a-z0-9\-+]+))?!)'
+        req_pattern = r'(?:(?P<request>[a-z]+)\?)$'
+        full_pattern = r"|".join((cmd_pattern, req_pattern))
+        pattern = re.compile(full_pattern)
+
         match = pattern.fullmatch(msg)
         if not match:
             raise ValueError('Message not understood: `%s`' % msg)
