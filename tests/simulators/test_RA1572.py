@@ -182,3 +182,15 @@ class TestRA1572Request(TestCase):
 
     def test_raises_for_wrong_command(self):
         self.assertRaises(ValueError, self.amp.request, 'toto')
+
+    def test_returns_proper_regex(self):
+        commands = ['power',
+                    'volume',
+                    'mute',
+                    'source']
+        self.amp.auto_update = 'on'
+        for value in commands:
+            with self.subTest(value=value):
+                result = self.amp.request(value)
+                regex = r'^[a-z_]+=[a-z0-9_]+$'
+                self.assertRegex(result, regex)
