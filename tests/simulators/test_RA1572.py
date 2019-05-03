@@ -67,6 +67,13 @@ class TestRA1572Volume(TestCase):
                 self.amp._volume = value
                 self.assertEqual(self.amp.volume, "%02i" % value)
 
+    def test_volume_is_set(self):
+        # volume = 0 is illegal
+        for vol in range (self.amp.VOL_MIN+1, self.amp.VOL_MAX + 1):
+            with self.subTest(value=vol):
+                self.amp.volume = str(vol)
+                self.assertEqual(self.amp.volume, "%02i" % vol)
+
 
 class TestRA1572Mute(TestCase):
     def setUp(self) -> None:
@@ -76,7 +83,7 @@ class TestRA1572Mute(TestCase):
 
     def test_raises_for_wrong_state(self):
         with self.assertRaises(ValueError):
-            self.amp.power = 'something'
+            self.amp.mute = 'something'
 
     def test_on_off(self):
         for state in self.mute_dict.items():
@@ -121,3 +128,34 @@ class TestRA1572AutoUpdate(TestCase):
             with self.subTest(value=value[1]):
                 self.amp._auto_update = value[0]
                 self.assertEqual(self.amp.auto_update, value[1])
+
+
+class TestRA1572Source(TestCase):
+    def setUp(self) -> None:
+        self.amp = RA1572()
+
+    def test_raises_for_wrong_source(self):
+        with self.assertRaises(ValueError):
+            self.amp.source = 'toto'
+
+    def test_sets_the_source(self):
+        for src in self.amp.SOURCES:
+            with self.subTest(value=src):
+                self.amp.source = src
+                self.assertEqual(self.amp.source, src)
+
+
+class TestRA1572Command(TestCase):
+    def setUp(self) -> None:
+        self.amp = RA1572()
+
+    def test_raises_for_wrong_command(self):
+        self.assertRaises(ValueError, self.amp.command, 'toto')
+
+
+class TestRA1572Request(TestCase):
+    def setUp(self) -> None:
+        self.amp = RA1572()
+
+    def test_raises_for_wrong_command(self):
+        self.assertRaises(ValueError, self.amp.request, 'toto')
