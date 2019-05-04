@@ -168,8 +168,10 @@ class RA1572:
         cmd, arg, req = match.groups()
 
         if cmd:
-            return self.command(cmd, arg)
-        elif req:
-            return self.request(req)
+            result = self.command(cmd, arg)
         else:
-            raise ValueError('Message not understood: `%s`' % msg)
+            result = self.request(req)
+
+        if result:
+            result += "$"
+            return result

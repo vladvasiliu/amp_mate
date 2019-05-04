@@ -1,4 +1,5 @@
 from unittest import TestCase
+from unittest.mock import patch
 
 from amp_mate.simulators.rotel_simulator import RA1572
 
@@ -194,3 +195,28 @@ class TestRA1572Request(TestCase):
                 result = self.amp.request(value)
                 regex = r'^[a-z_]+=[a-z0-9_]+$'
                 self.assertRegex(result, regex)
+
+
+class TestRA1572HandleMessage(TestCase):
+    def setUp(self) -> None:
+        self.amp=RA1572()
+
+    def test_calls_command(self):
+        with patch.object(self.amp, 'command', autospec=True) as command:
+            self.amp.handle_message('toto!')
+            command.assert_called()
+
+    def test_calls_request(self):
+        with patch.object(self.amp, 'request', autospec=True) as command:
+            self.amp.handle_message('toto?')
+            command.assert_called()
+
+    def test_raises_for_invalid_message(self):
+        messages = ['', 'toto', '1234?', 'toto.toto', '?', '!']
+        for msg in messages:
+            with self.subTest(value=msg):
+                self.assertRaises(ValueError, self.amp.handle_message, msg)
+
+    def test_answer_ends_with_dollar(self):
+        result = self.amp.handle_message('volume?')
+        self.assertRegex(result, r'.+\$$')
