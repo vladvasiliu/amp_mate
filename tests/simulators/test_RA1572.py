@@ -17,7 +17,7 @@ class TestRA1572Power(TestCase):
         for state in power_dict.items():
             with self.subTest(value=state[1]):
                 self.amp.power = state[1]
-                self.assertIs(self.amp._power, state[0])
+                self.assertEqual(self.amp._power, state[0])
 
     def test_toggle(self):
         power_dict = {True: "power=on",
@@ -89,7 +89,7 @@ class TestRA1572Mute(TestCase):
         for state in self.mute_dict.items():
             with self.subTest(value=state[1]):
                 self.amp.mute = state[1]
-                self.assertIs(self.amp._mute, state[0])
+                self.assertEqual(self.amp._mute, state[0])
 
     def test_returns_on_or_off(self):
         for value in self.mute_dict.items():
@@ -119,7 +119,7 @@ class TestRA1572AutoUpdate(TestCase):
         for state in update_dict.items():
             with self.subTest(value=state[1]):
                 self.amp.auto_update = state[1]
-                self.assertIs(self.amp._auto_update, state[0])
+                self.assertEqual(self.amp._auto_update, state[0])
 
     def test_returns_auto_or_manual(self):
         update_dict = {True: 'auto',

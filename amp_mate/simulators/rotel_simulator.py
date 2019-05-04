@@ -75,11 +75,11 @@ class RA1572:
 
     @volume.setter
     def volume(self, value: str):
-        if value is 'up':
+        if value == 'up':
             self._volume = min(self._volume + 1, self.VOL_MAX)
-        elif value is 'dwn':
+        elif value == 'dwn':
             self._volume = max(self._volume - 1, self.VOL_MIN)
-        elif value is 'min':
+        elif value == 'min':
             self._volume = self.VOL_MIN
         elif self.VOL_MIN < int(value) <= self.VOL_MAX:
             self._volume = int(value)
@@ -93,9 +93,9 @@ class RA1572:
     @mute.setter
     def mute(self, value: Optional[str] = None):
         """Set mute state. If value is None, toggle mute."""
-        if value is 'on':
+        if value == 'on':
             self._mute = True
-        elif value is 'off':
+        elif value == 'off':
             self._mute = False
         elif value is None:
             self._mute = not self._mute
@@ -119,9 +119,9 @@ class RA1572:
 
     @auto_update.setter
     def auto_update(self, value: str):
-        if value is 'on':
+        if value == 'on':
             self._auto_update = True
-        elif value is 'off':
+        elif value == 'off':
             self._auto_update = False
         else:
             raise ValueError("Unknown auto update mode %s" % value)
