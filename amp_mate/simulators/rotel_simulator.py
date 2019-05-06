@@ -40,6 +40,18 @@ class RA1572:
                 'version': 'version',
                 'model': 'model'}
 
+    """ This is a map of the form `pattern: attribute`. Whichever pattern matches indicates witch attribute to get/set. 
+    
+    Command patterns will match with an `arg` group. If a pattern matches and there's no such group,
+    it means the message is a request.
+    """
+    # Commands with an argument, like `vol_up`
+    MSG_PATTERNS = {re.compile(r'^%s_(?P<arg>[a-z0-9\-+]+)!$' % cmd): attr for cmd, attr in COMMANDS.items()}
+    # Commands without an argument, like `cd`
+    MSG_PATTERNS.update({re.compile(r'^(?P<arg>%s)!$' % src): 'source' for src in SOURCES})
+    # Requests
+    MSG_PATTERNS.update({re.compile(r'%s\?$' % req): attr for req, attr in REQUESTS.items()})
+
     def __init__(self):
         self._power = True
         self._source = "cd"
@@ -156,21 +168,23 @@ class RA1572:
         If the command is a getter, the function always returns something or raises an exception.
         If the command is a setter, the function only returns if auto_update is True and if the function returns
         something.
+
+        See the comment for MSG_PATTERNS above for how this works.
         """
-        cmd_pattern = r'^(?:(?P<command>[a-z0-9]+)(?:_(?P<arg>[a-z0-9\-+]+))?!)'
-        req_pattern = r'(?:(?P<request>[a-z]+)\?)$'
-        full_pattern = r"|".join((cmd_pattern, req_pattern))
-        pattern = re.compile(full_pattern)
+        for pattern, attr in self.MSG_PATTERNS.items():
+            match = pattern.fullmatch(msg)
 
-        match = pattern.fullmatch(msg)
-        if not match:
-            raise ValueError('Message not understood: `%s`' % msg)
-        cmd, arg, req = match.groups()
+            if not match:
+                continue
 
-        if cmd:
-            result = self.command(cmd, arg)
+            if match.groups():
+                arg, = match.groups()
+                result = self.command(attr, arg)
+            else:
+                result = self.request(attr)
+            break
         else:
-            result = self.request(req)
+            raise ValueError('Message not understood: `%s`' % msg)
 
         if result:
             result += "$"

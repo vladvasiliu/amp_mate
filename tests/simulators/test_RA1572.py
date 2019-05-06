@@ -203,12 +203,12 @@ class TestRA1572HandleMessage(TestCase):
 
     def test_calls_command(self):
         with patch.object(self.amp, 'command', autospec=True) as command:
-            self.amp.handle_message('toto!')
+            self.amp.handle_message('vol_up!')
             command.assert_called()
 
     def test_calls_request(self):
         with patch.object(self.amp, 'request', autospec=True) as command:
-            self.amp.handle_message('toto?')
+            self.amp.handle_message('volume?')
             command.assert_called()
 
     def test_raises_for_invalid_message(self):
@@ -220,3 +220,8 @@ class TestRA1572HandleMessage(TestCase):
     def test_answer_ends_with_dollar(self):
         result = self.amp.handle_message('volume?')
         self.assertRegex(result, r'.+\$$')
+
+    def test_command_with_two_underscores(self):
+        with patch.object(self.amp, 'command', autospec=True) as command:
+            self.amp.handle_message('rs232_update_on!')
+            command.assert_called_with('auto_update', 'on')
