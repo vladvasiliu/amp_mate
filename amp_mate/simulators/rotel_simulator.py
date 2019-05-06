@@ -6,9 +6,9 @@ class RA1572:
     """Simulates a Rotel RA-1572 v2.65 and newer amplifier. Not all functions are implemented.
 
     Command codes are based on the RS232/IP Protocol.
-    Source: http://www.rotel.com/sites/default/files/product/rs232/RA1572%20Protocol.pdf
+    `Source <http://www.rotel.com/sites/default/files/product/rs232/RA1572%20Protocol.pdf>`_.
 
-    Implemented functions are in the COMMANDS and REQUESTS attributes.
+    Implemented functions are in the ``COMMANDS`` and ``REQUESTS`` attributes.
     """
     VOL_MIN = 0
     VOL_MAX = 96
@@ -40,13 +40,14 @@ class RA1572:
                 'version': 'version',
                 'model': 'model'}
 
-    """ This is a map of the form `pattern: attribute`. Whichever pattern matches indicates witch attribute to get/set. 
+    # Commands with an argument, like `vol_up`
+    MSG_PATTERNS = {re.compile(r'^%s_(?P<arg>[a-z0-9\-+]+)!$' % cmd): attr for cmd, attr in COMMANDS.items()}
+    """ This is a map of the form :code:`pattern: attribute` Whichever pattern matches indicates witch attribute to
+    get/set. 
     
     Command patterns will match with an `arg` group. If a pattern matches and there's no such group,
     it means the message is a request.
     """
-    # Commands with an argument, like `vol_up`
-    MSG_PATTERNS = {re.compile(r'^%s_(?P<arg>[a-z0-9\-+]+)!$' % cmd): attr for cmd, attr in COMMANDS.items()}
     # Commands without an argument, like `cd`
     MSG_PATTERNS.update({re.compile(r'^(?P<arg>%s)!$' % src): 'source' for src in SOURCES})
     # Requests
@@ -162,14 +163,24 @@ class RA1572:
         """Interprets the message received from the client.
 
         There are two types of messages:
+
         1. Commands, aka setters. They end with a `!`
         2. Requests, aka getters. They end with a `?`
 
         If the command is a getter, the function always returns something or raises an exception.
-        If the command is a setter, the function only returns if auto_update is True and if the function returns
-        something.
+        If the command is a setter, the function only returns if :attr:`~auto_update` is `True` and if the function
+        returns something.
 
-        See the comment for MSG_PATTERNS above for how this works.
+        See the comment for :attr:`~MSG_PATTERNS` above for how this works.
+
+        Attributes:
+            msg (str): The message as received from the client.
+
+        Returns:
+            Optional[str]: The reply of the command.
+
+        Raises:
+            ValueError: If the message is not understood for various reasons (unknown command, wrong termination, etc).
         """
         for pattern, attr in self.MSG_PATTERNS.items():
             match = pattern.fullmatch(msg)
