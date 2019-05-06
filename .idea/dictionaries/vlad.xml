@@ -4,6 +4,7 @@
       <w>asyncio</w>
       <w>bluetooth</w>
       <w>pcusb</w>
+      <w>peername</w>
       <w>phono</w>
       <w>rotel</w>
       <w>volumio</w>
