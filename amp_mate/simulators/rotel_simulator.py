@@ -41,12 +41,12 @@ class RA1572:
                 'model': 'model'}
 
     # Commands with an argument, like `vol_up`
-    MSG_PATTERNS = {re.compile(r'^%s_(?P<arg>[a-z0-9\-+]+)!$' % cmd): attr for cmd, attr in COMMANDS.items()}
-    """ This is a map of the form :code:`pattern: attribute` Whichever pattern matches indicates witch attribute to
+    MSG_PATTERNS = {re.compile(r'^%s(?:_(?P<arg>[a-z0-9\-+]+))?!$' % cmd): attr for cmd, attr in COMMANDS.items()}
+    """ This is a map of the form :code:`pattern: attribute`. Whichever pattern matches indicates witch attribute to
     get/set. 
     
-    Command patterns will match with an `arg` group. If a pattern matches and there's no such group,
-    it means the message is a request.
+    Command patterns will match with an `arg` group. This may be ``None``, e.g. in the case of ``mute!``.
+    Requests match without the `arg` group.
     """
     # Commands without an argument, like `cd`
     MSG_PATTERNS.update({re.compile(r'^(?P<arg>%s)!$' % src): 'source' for src in SOURCES})
@@ -139,26 +139,6 @@ class RA1572:
         else:
             raise ValueError("Unknown auto update mode %s" % value)
 
-    def command(self, cmd: str, arg: Optional[str] = None) -> Optional[str]:
-        try:
-            prop = self.COMMANDS[cmd]
-        except KeyError:
-            if not arg and cmd in self.SOURCES:
-                arg = cmd
-                prop = 'source'
-            else:
-                raise ValueError('Unknown command %s' % cmd)
-        setattr(self, prop, arg)
-        if self._auto_update:
-            return getattr(self, prop)
-
-    def request(self, req: str) -> str:
-        try:
-            prop = self.REQUESTS[req]
-        except KeyError:
-            raise ValueError('Unknown request %s' % req)
-        return getattr(self, prop)
-
     def handle_message(self, msg: str) -> Optional[str]:
         """Interprets the message received from the client.
 
@@ -171,7 +151,7 @@ class RA1572:
         If the command is a setter, the function only returns if :attr:`~auto_update` is `True` and if the function
         returns something.
 
-        See the comment for :attr:`~MSG_PATTERNS` above for how this works.
+        The command is matched with a pattern. See the description of :attr:`~MSG_PATTERNS` above for how this works.
 
         Attributes:
             msg (str): The message as received from the client.
@@ -190,9 +170,10 @@ class RA1572:
 
             if match.groups():
                 arg, = match.groups()
-                result = self.command(attr, arg)
+                setattr(self, attr, arg)
+                result = getattr(self, attr) if self._auto_update else None
             else:
-                result = self.request(attr)
+                result = getattr(self, attr)
             break
         else:
             raise ValueError('Message not understood: `%s`' % msg)
