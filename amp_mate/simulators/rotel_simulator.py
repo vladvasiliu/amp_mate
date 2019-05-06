@@ -8,7 +8,7 @@ class RA1572:
     Command codes are based on the RS232/IP Protocol.
     `Source <http://www.rotel.com/sites/default/files/product/rs232/RA1572%20Protocol.pdf>`_.
 
-    Implemented functions are in the :attr:`~COMMANDS` and :attr:`~REQUESTS` attributes.
+    Implemented functions are in the :attr:`~_COMMANDS` and :attr:`~_REQUESTS` attributes.
     """
     VOL_MIN = 0
     VOL_MAX = 96
@@ -18,30 +18,30 @@ class RA1572:
     BAL_MAX = 15
     DIM_MIN = 0
     DIM_MAX = 6
-    SOURCES = ["cd", "aux", "tuner", "phono", "bal_xlr",
+    _SOURCES = ["cd", "aux", "tuner", "phono", "bal_xlr",
                "coax1", "coax2", "opt1", "opt2", "usb", "bluetooth", "pcusb"]
 
-    COMMANDS = {'power': 'power',
-                'vol': 'volume',
-                'mute': 'mute',
-                'rs232_update': 'auto_update'
-                }
-    REQUESTS = {'power': 'power',
-                'source': 'source',
-                'volume': 'volume',
-                'mute': 'mute',
-                'bypass': 'bypass',
-                'bass': 'bass',
-                'treble': 'treble',
-                'balance': 'balance',
-                'freq': 'freq',
-                'speaker': 'speaker',
-                'dimmer': 'dimmer',
-                'version': 'version',
-                'model': 'model'}
+    _COMMANDS = {'power': 'power',
+                 'vol': 'volume',
+                 'mute': 'mute',
+                 'rs232_update': 'auto_update'
+                 }
+    _REQUESTS = {'power': 'power',
+                 'source': 'source',
+                 'volume': 'volume',
+                 'mute': 'mute',
+                 'bypass': 'bypass',
+                 'bass': 'bass',
+                 'treble': 'treble',
+                 'balance': 'balance',
+                 'freq': 'freq',
+                 'speaker': 'speaker',
+                 'dimmer': 'dimmer',
+                 'version': 'version',
+                 'model': 'model'}
 
     # Commands with an argument, like `vol_up`
-    MSG_PATTERNS = {re.compile(r'^%s(?:_(?P<arg>[a-z0-9\-+]+))?!$' % cmd): attr for cmd, attr in COMMANDS.items()}
+    MSG_PATTERNS = {re.compile(r'^%s(?:_(?P<arg>[a-z0-9\-+]+))?!$' % cmd): attr for cmd, attr in _COMMANDS.items()}
     """ This is a map of the form :code:`pattern: attribute`. Whichever pattern matches indicates witch attribute to
     get/set. 
     
@@ -49,9 +49,9 @@ class RA1572:
     Requests match without the `arg` group.
     """
     # Commands without an argument, like `cd`
-    MSG_PATTERNS.update({re.compile(r'^(?P<arg>%s)!$' % src): 'source' for src in SOURCES})
+    MSG_PATTERNS.update({re.compile(r'^(?P<arg>%s)!$' % src): 'source' for src in _SOURCES})
     # Requests
-    MSG_PATTERNS.update({re.compile(r'%s\?$' % req): attr for req, attr in REQUESTS.items()})
+    MSG_PATTERNS.update({re.compile(r'%s\?$' % req): attr for req, attr in _REQUESTS.items()})
 
     def __init__(self):
         self._power = True
@@ -121,17 +121,25 @@ class RA1572:
 
     @source.setter
     def source(self, value: str):
-        if value in self.SOURCES:
+        if value in self._SOURCES:
             self._source = value
         else:
             raise ValueError("Unknown source %s" % value)
 
     @property
-    def auto_update(self):
+    def auto_update(self) -> str:
+        """ Whether the amp sends an update when the state changes.
+
+        Values are `auto` or `manual`.
+        """
         return 'update_mode=%s' % ('auto' if self._auto_update else 'manual')
 
     @auto_update.setter
     def auto_update(self, value: str):
+        """Set auto update.
+
+        Possible values are `on` and `off`.
+        """
         if value == 'on':
             self._auto_update = True
         elif value == 'off':

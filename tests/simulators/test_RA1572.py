@@ -139,7 +139,7 @@ class TestRA1572Source(TestCase):
             self.amp.source = 'toto'
 
     def test_sets_the_source(self):
-        for src in self.amp.SOURCES:
+        for src in self.amp._SOURCES:
             with self.subTest(value=src):
                 self.amp.source = src
                 self.assertEqual(self.amp.source, "source=%s" % src)
