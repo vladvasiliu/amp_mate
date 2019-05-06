@@ -1,5 +1,10 @@
+import asyncio
+from asyncio import StreamReader, StreamWriter
+import logging
 import re
 from typing import Optional
+
+logger = logging.getLogger(__name__)
 
 
 class RA1572:
@@ -53,7 +58,7 @@ class RA1572:
     # Requests
     MSG_PATTERNS.update({re.compile(r'%s\?$' % req): attr for req, attr in _REQUESTS.items()})
 
-    def __init__(self):
+    def __init__(self, host: Optional[str] = '0.0.0.0', port: Optional[int] = 9590):
         self._power = True
         self._source = "cd"
         self._volume = 0
@@ -66,6 +71,9 @@ class RA1572:
         self._speaker_b = True
         self._dimmer = 0
         self._auto_update = False
+        self._host = host
+        self._port = port
+        self._srv = None
 
     @property
     def power(self):
@@ -189,3 +197,34 @@ class RA1572:
         if result:
             result += "$"
             return result
+
+    async def handle_connection(self, reader: StreamReader, writer: StreamWriter):
+        peer = writer.get_extra_info('peername')
+        logger.info('Got a new connection from {}'.format(peer))
+
+        message = await reader.readline()
+        logger.debug("Got %s" % message.decode())
+        result = self.handle_message(message.decode())
+
+    async def start(self):
+        self._srv = await asyncio.start_server(self.handle_connection, host=self._host, port=self._port)
+        logger.info('Listening on %s:%s' % (self._host, self._port))
+        await self._srv.serve_forever()
+
+    async def stop(self):
+        await self._srv.close()
+        await self._srv.wait_closed()
+        self._srv = None
+
+    async def __aenter__(self):
+        await self.start()
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.stop()
+
+
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
+    ra = RA1572()
+    asyncio.run(ra.start())
