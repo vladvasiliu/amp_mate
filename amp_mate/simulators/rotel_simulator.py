@@ -8,7 +8,7 @@ class RA1572:
     Command codes are based on the RS232/IP Protocol.
     `Source <http://www.rotel.com/sites/default/files/product/rs232/RA1572%20Protocol.pdf>`_.
 
-    Implemented functions are in the ``COMMANDS`` and ``REQUESTS`` attributes.
+    Implemented functions are in the :attr:`~COMMANDS` and :attr:`~REQUESTS` attributes.
     """
     VOL_MIN = 0
     VOL_MAX = 96
