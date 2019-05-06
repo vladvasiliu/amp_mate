@@ -19,7 +19,7 @@ class RA1572:
     DIM_MIN = 0
     DIM_MAX = 6
     _SOURCES = ["cd", "aux", "tuner", "phono", "bal_xlr",
-               "coax1", "coax2", "opt1", "opt2", "usb", "bluetooth", "pcusb"]
+                "coax1", "coax2", "opt1", "opt2", "usb", "bluetooth", "pcusb"]
 
     _COMMANDS = {'power': 'power',
                  'vol': 'volume',
