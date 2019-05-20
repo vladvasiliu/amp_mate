@@ -11,7 +11,7 @@ It will allow:
 * Control of amplifier volume by the player (and its app).
 * Turn the amp on/off or set the correct source on player events.
 * Have the player know what the amplifier is doing, e.g. stop playback when the amplifier is turned off or the input is
-changed.
+  changed.
 
 This is mainly tested with a Rotel amp and Volumio player, but is designed to be an abstract bridge between the two and
 handle plugins for other amps and players.
@@ -25,7 +25,7 @@ manufacturers offer all-in-products, but if you happen to have higher-end equipm
 your components are from the same manufacturer.
 
 From a home automation standpoint, the combination of Player & Amp should be a single unit. The amp in this scenario is
-basically "dumb". **amp_mate** is the glue that binds the player to the amp.
+basically "dumb". *amp_mate* is the glue that binds the player to the amp.
 
 
 Useful documentation
