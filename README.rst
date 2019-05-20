@@ -1,13 +1,5 @@
-.. image:: https://img.shields.io/travis/vladvasiliu/amp_mate.svg
-    :alt: Travis
-    :target: https://travis-ci.org/vladvasiliu/amp_mate
-.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
-    :alt: code style
-    :target: https://github.com/python/black
-.. image:: https://img.shields.io/github/license/vladvasiliu/amp_mate.svg
-    :alt: GPLv3
-.. image:: https://img.shields.io/readthedocs/amp-mate.svg
-    :alt: Read the Docs
+|Travis badge| |Style badge| |Docs badge| |License badge|
+
 
 AMP_MATE
 ========
@@ -39,3 +31,12 @@ Useful documentation
 --------------------
 * `Volumio Websocket API <https://volumio.github.io/docs/Development_How_To/Overview.html>`_
 * `Rotel command reference <http://rotel.com/manuals-resources/rs232-protocols>`_
+
+.. |Travis badge| image:: https://img.shields.io/travis/vladvasiliu/amp_mate.svg
+   :target: https://travis-ci.org/vladvasiliu/amp_mate
+.. |Style badge| image:: https://img.shields.io/badge/code%20style-black-000000.svg
+   :target: https://github.com/python/black
+.. |License badge| image:: https://img.shields.io/github/license/vladvasiliu/amp_mate.svg
+   :target: LICENSE
+.. |Docs badge| image:: https://img.shields.io/badge/docs-latest-brightgreen.svg
+   :target: https://amp-mate.readthedocs.io
