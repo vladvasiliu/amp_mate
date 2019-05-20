@@ -198,17 +198,29 @@ class RA1572:
             result += "$"
             return result
 
+    def status(self):
+        power = "Power: %s" % self.power
+        volume = "Volume: %s" % self.volume
+        mute = "Mute: %s" % self.mute
+
+        return "Status: %15s - %12s - %10s" % (power, volume, mute)
+
     async def handle_connection(self, reader: StreamReader, writer: StreamWriter):
         peer = writer.get_extra_info('peername')
-        logger.info('Got a new connection from {}'.format(peer))
+        logger.info('Got a new connection from {}.'.format(peer))
 
-        message = await reader.readline()
-        logger.debug("Got %s" % message.decode())
-        result = self.handle_message(message.decode())
+        while True:
+            message = (await reader.read(100)).decode()
+            logger.debug("Got message '%s'." % message)
+            result = self.handle_message(message)
+            logger.debug(self.status())
+            if result:
+                writer.write(result.encode())
 
     async def start(self):
         self._srv = await asyncio.start_server(self.handle_connection, host=self._host, port=self._port)
         logger.info('Listening on %s:%s' % (self._host, self._port))
+        logger.info(self.status())
         await self._srv.serve_forever()
 
     async def stop(self):
