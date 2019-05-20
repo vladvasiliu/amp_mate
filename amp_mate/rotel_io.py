@@ -3,14 +3,14 @@ from asyncio import StreamWriter, StreamReader
 
 
 def get_input():
-    msg = input('? ')
+    msg = input("? ")
     return msg
 
 
 async def read_from_amp(reader: StreamReader):
     while True:
-        data = await reader.readuntil(b'$')
-        print(f'Received: {data.decode()!r}')
+        data = await reader.readuntil(b"$")
+        print(f"Received: {data.decode()!r}")
 
 
 async def write_to_amp(writer: StreamWriter):
@@ -25,20 +25,17 @@ async def write_to_amp(writer: StreamWriter):
 
 
 async def tcp_echo_client():
-    reader, writer = await asyncio.open_connection('rotel', 9590)
+    reader, writer = await asyncio.open_connection("rotel", 9590)
 
-    writer.write('rs232_update_on!'.encode())
-    writer.write('vol_up!'.encode())
+    writer.write("rs232_update_on!".encode())
+    writer.write("vol_up!".encode())
 
-    await asyncio.gather(
-        read_from_amp(reader),
-        write_to_amp(writer),
-    )
+    await asyncio.gather(read_from_amp(reader), write_to_amp(writer))
 
-    print('Close the connection')
+    print("Close the connection")
     writer.close()
     await writer.wait_closed()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     asyncio.run(tcp_echo_client())

@@ -15,6 +15,7 @@ class RA1572:
 
     Implemented functions are in the :attr:`~_COMMANDS` and :attr:`~_REQUESTS` attributes.
     """
+
     VOL_MIN = 0
     VOL_MAX = 96
     TONE_MIN = 0
@@ -23,30 +24,27 @@ class RA1572:
     BAL_MAX = 15
     DIM_MIN = 0
     DIM_MAX = 6
-    _SOURCES = ["cd", "aux", "tuner", "phono", "bal_xlr",
-                "coax1", "coax2", "opt1", "opt2", "usb", "bluetooth", "pcusb"]
+    _SOURCES = ["cd", "aux", "tuner", "phono", "bal_xlr", "coax1", "coax2", "opt1", "opt2", "usb", "bluetooth", "pcusb"]
 
-    _COMMANDS = {'power': 'power',
-                 'vol': 'volume',
-                 'mute': 'mute',
-                 'rs232_update': 'auto_update'
-                 }
-    _REQUESTS = {'power': 'power',
-                 'source': 'source',
-                 'volume': 'volume',
-                 'mute': 'mute',
-                 'bypass': 'bypass',
-                 'bass': 'bass',
-                 'treble': 'treble',
-                 'balance': 'balance',
-                 'freq': 'freq',
-                 'speaker': 'speaker',
-                 'dimmer': 'dimmer',
-                 'version': 'version',
-                 'model': 'model'}
+    _COMMANDS = {"power": "power", "vol": "volume", "mute": "mute", "rs232_update": "auto_update"}
+    _REQUESTS = {
+        "power": "power",
+        "source": "source",
+        "volume": "volume",
+        "mute": "mute",
+        "bypass": "bypass",
+        "bass": "bass",
+        "treble": "treble",
+        "balance": "balance",
+        "freq": "freq",
+        "speaker": "speaker",
+        "dimmer": "dimmer",
+        "version": "version",
+        "model": "model",
+    }
 
     # Commands with an argument, like `vol_up`
-    MSG_PATTERNS = {re.compile(r'^%s(?:_(?P<arg>[a-z0-9\-+]+))?!$' % cmd): attr for cmd, attr in _COMMANDS.items()}
+    MSG_PATTERNS = {re.compile(r"^%s(?:_(?P<arg>[a-z0-9\-+]+))?!$" % cmd): attr for cmd, attr in _COMMANDS.items()}
     """ This is a map of the form :code:`pattern: attribute`. Whichever pattern matches indicates witch attribute to
     get/set. 
     
@@ -54,11 +52,11 @@ class RA1572:
     Requests match without the `arg` group.
     """
     # Commands without an argument, like `cd`
-    MSG_PATTERNS.update({re.compile(r'^(?P<arg>%s)!$' % src): 'source' for src in _SOURCES})
+    MSG_PATTERNS.update({re.compile(r"^(?P<arg>%s)!$" % src): "source" for src in _SOURCES})
     # Requests
-    MSG_PATTERNS.update({re.compile(r'%s\?$' % req): attr for req, attr in _REQUESTS.items()})
+    MSG_PATTERNS.update({re.compile(r"%s\?$" % req): attr for req, attr in _REQUESTS.items()})
 
-    def __init__(self, host: Optional[str] = '0.0.0.0', port: Optional[int] = 9590):
+    def __init__(self, host: Optional[str] = "0.0.0.0", port: Optional[int] = 9590):
         self._power = True
         self._source = "cd"
         self._volume = 0
@@ -66,7 +64,7 @@ class RA1572:
         self._bypass = True
         self._bass = 0
         self._treble = 0
-        self._balance = 0   # -15 = Full left / +15 = Full right
+        self._balance = 0  # -15 = Full left / +15 = Full right
         self._speaker_a = True
         self._speaker_b = True
         self._dimmer = 0
@@ -81,14 +79,14 @@ class RA1572:
 
     @power.setter
     def power(self, value: str):
-        if value == 'on':
+        if value == "on":
             self._power = True
-        elif value == 'off':
+        elif value == "off":
             self._power = False
-        elif value == 'toggle':
+        elif value == "toggle":
             self._power = not self._power
         else:
-            raise ValueError('Unknown power mode %s' % value)
+            raise ValueError("Unknown power mode %s" % value)
 
     @property
     def volume(self):
@@ -96,16 +94,16 @@ class RA1572:
 
     @volume.setter
     def volume(self, value: str):
-        if value == 'up':
+        if value == "up":
             self._volume = min(self._volume + 1, self.VOL_MAX)
-        elif value == 'dwn':
+        elif value == "dwn":
             self._volume = max(self._volume - 1, self.VOL_MIN)
-        elif value == 'min':
+        elif value == "min":
             self._volume = self.VOL_MIN
         elif self.VOL_MIN < int(value) <= self.VOL_MAX:
             self._volume = int(value)
         else:
-            raise ValueError('Unknown volume %s' % value)
+            raise ValueError("Unknown volume %s" % value)
 
     @property
     def mute(self):
@@ -114,18 +112,18 @@ class RA1572:
     @mute.setter
     def mute(self, value: Optional[str] = None):
         """Set mute state. If value is None, toggle mute."""
-        if value == 'on':
+        if value == "on":
             self._mute = True
-        elif value == 'off':
+        elif value == "off":
             self._mute = False
         elif value is None:
             self._mute = not self._mute
         else:
-            raise ValueError('Unknown mute state %s' % value)
+            raise ValueError("Unknown mute state %s" % value)
 
     @property
     def source(self):
-        return 'source=%s' % self._source
+        return "source=%s" % self._source
 
     @source.setter
     def source(self, value: str):
@@ -140,7 +138,7 @@ class RA1572:
 
         Values are `auto` or `manual`.
         """
-        return 'update_mode=%s' % ('auto' if self._auto_update else 'manual')
+        return "update_mode=%s" % ("auto" if self._auto_update else "manual")
 
     @auto_update.setter
     def auto_update(self, value: str):
@@ -148,9 +146,9 @@ class RA1572:
 
         Possible values are `on` and `off`.
         """
-        if value == 'on':
+        if value == "on":
             self._auto_update = True
-        elif value == 'off':
+        elif value == "off":
             self._auto_update = False
         else:
             raise ValueError("Unknown auto update mode %s" % value)
@@ -192,7 +190,7 @@ class RA1572:
                 result = getattr(self, attr)
             break
         else:
-            raise ValueError('Message not understood: `%s`' % msg)
+            raise ValueError("Message not understood: `%s`" % msg)
 
         if result:
             result += "$"
@@ -206,8 +204,8 @@ class RA1572:
         return "Status: %15s - %12s - %10s" % (power, volume, mute)
 
     async def handle_connection(self, reader: StreamReader, writer: StreamWriter):
-        peer = writer.get_extra_info('peername')
-        logger.info('Got a new connection from {}.'.format(peer))
+        peer = writer.get_extra_info("peername")
+        logger.info("Got a new connection from {}.".format(peer))
 
         while True:
             message = (await reader.read(100)).decode()
@@ -219,7 +217,7 @@ class RA1572:
 
     async def start(self):
         self._srv = await asyncio.start_server(self.handle_connection, host=self._host, port=self._port)
-        logger.info('Listening on %s:%s' % (self._host, self._port))
+        logger.info("Listening on %s:%s" % (self._host, self._port))
         logger.info(self.status())
         await self._srv.serve_forever()
 
@@ -236,7 +234,7 @@ class RA1572:
         await self.stop()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
     ra = RA1572()
     asyncio.run(ra.start())

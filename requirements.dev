@@ -5,3 +5,4 @@ sphinx
 sphinx_rtd_theme
 sphinx-autodoc-typehints
 coverage
+black

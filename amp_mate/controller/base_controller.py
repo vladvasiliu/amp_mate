@@ -73,9 +73,8 @@ class ControllerStatus:
 
     This should only be modified by the controller
     """
-    def __init__(self,
-                 volume: Optional[VolumeStatus] = None,
-                 playback: Optional[PlaybackStatus] = None):
+
+    def __init__(self, volume: Optional[VolumeStatus] = None, playback: Optional[PlaybackStatus] = None):
         self.volume = volume
         self.playback = playback
 
@@ -92,6 +91,7 @@ class Controller:
 
     Volume goes from min = 0 to max = 100
     """
+
     async def connect(self):
         raise NotImplementedError
 

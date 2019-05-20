@@ -12,19 +12,20 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('.'))
-sys.path.insert(0, os.path.abspath('../'))
-sys.path.insert(0, os.path.abspath('../amp_mate'))
+
+sys.path.insert(0, os.path.abspath("."))
+sys.path.insert(0, os.path.abspath("../"))
+sys.path.insert(0, os.path.abspath("../amp_mate"))
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'Amp Mate'
-copyright = '2019, Vlad Vasiliu'
-author = 'Vlad Vasiliu'
+project = "Amp Mate"
+copyright = "2019, Vlad Vasiliu"
+author = "Vlad Vasiliu"
 
 # The full version, including alpha/beta/rc tags
-release = '0.1'
+release = "0.1"
 
 
 # -- General configuration ---------------------------------------------------
@@ -32,22 +33,18 @@ release = '0.1'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.napoleon',
-    'sphinx_autodoc_typehints',
-]
+extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon", "sphinx_autodoc_typehints"]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 trim_footnote_reference_space = True
-master_doc = 'index'
+master_doc = "index"
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -55,11 +52,9 @@ master_doc = 'index'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+html_theme = "sphinx_rtd_theme"
 
-html_theme_options = {
-    'analytics_id': 'UA-139152279-1',
-}
+html_theme_options = {"analytics_id": "UA-139152279-1"}
 
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -70,8 +65,4 @@ html_theme_options = {
 
 # -- Options for autodoc -----------------------------------------------------
 
-autodoc_default_options = {
-    'member-order': 'bysource',
-    'private-members': True,
-    'undoc-members': True,
-}
+autodoc_default_options = {"member-order": "bysource", "private-members": True, "undoc-members": True}

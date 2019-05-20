@@ -15,6 +15,7 @@ class Master:
 
     The controllers are asynchronous. The Master runs its own event loop and runs the controllers inside it.
     """
+
     def __init__(self, controllers: Iterable[Controller]):
         self._controllers = controllers
         self.loop = asyncio.get_event_loop()
@@ -28,12 +29,12 @@ class Master:
         self.stop()
 
     async def _connect(self):
-        logger.debug('Starting master.')
+        logger.debug("Starting master.")
         for c in self._controllers:
             await c.connect()
 
     async def _disconnect(self):
-        logger.info('Stopping master')
+        logger.info("Stopping master")
         for c in self._controllers:
             await c.disconnect()
 
@@ -42,13 +43,13 @@ class Master:
         self.loop.run_forever()
 
     def stop(self):
-        logger.info('Stopping master (got ^C).')
+        logger.info("Stopping master (got ^C).")
         self.loop.run_until_complete(self._disconnect())
         self.loop.stop()
 
 
-if __name__ == '__main__':
-    VOLUMIO_HOST = os.getenv('VOLUMIO_HOST')
+if __name__ == "__main__":
+    VOLUMIO_HOST = os.getenv("VOLUMIO_HOST")
     volumio = VolumioController(VOLUMIO_HOST, 3000)
 
     master = Master([volumio])

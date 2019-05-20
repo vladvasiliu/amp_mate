@@ -13,11 +13,7 @@ class RotelVolumeException(RotelStatusException):
 
 
 class RotelToneConfig:
-    def __init__(self,
-                 bypass: bool = False,
-                 low: int = -10,
-                 high: int = 10,
-                 bands: Iterable[str] = ('bass', 'treble')):
+    def __init__(self, bypass: bool = False, low: int = -10, high: int = 10, bands: Iterable[str] = ("bass", "treble")):
         self.bypass: bypass
         self.low = low
         self.high = high
@@ -25,18 +21,19 @@ class RotelToneConfig:
 
 
 class RotelConfigBase:
-    def __init__(self,
-                 min_volume: int,
-                 max_volume: int,
-                 sources: Iterable[str],
-                 speakers: Optional[Iterable[str]] = None,
-                 source_control: bool = False,
-                 tone: Optional[RotelToneConfig] = None,
-                 max_dimmer: Optional[int] = None,
-                 separator: str = '=',
-                 recv_end: str = '$',
-                 send_end: str = '!'
-                 ):
+    def __init__(
+        self,
+        min_volume: int,
+        max_volume: int,
+        sources: Iterable[str],
+        speakers: Optional[Iterable[str]] = None,
+        source_control: bool = False,
+        tone: Optional[RotelToneConfig] = None,
+        max_dimmer: Optional[int] = None,
+        separator: str = "=",
+        recv_end: str = "$",
+        send_end: str = "!",
+    ):
         self.min_volume = min_volume
         self.max_volume = max_volume
         self.sources = sources
@@ -83,8 +80,9 @@ class RotelStatus:
             if self._config.min_volume <= value <= self._config.max_volume:
                 self._volume = value
             else:
-                raise RotelVolumeException('Volume must be between %s and %s' % (self._config.min_volume,
-                                                                                 self._config.max_volume))
+                raise RotelVolumeException(
+                    "Volume must be between %s and %s" % (self._config.min_volume, self._config.max_volume)
+                )
 
 
 class RotelController:

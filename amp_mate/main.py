@@ -4,8 +4,8 @@ import os
 from controller import VolumioController
 
 
-if __name__ == '__main__':
-    VOLUMIO_HOST = os.getenv('VOLUMIO_HOST')
+if __name__ == "__main__":
+    VOLUMIO_HOST = os.getenv("VOLUMIO_HOST")
 
     volumio = VolumioController(VOLUMIO_HOST, 3000)
 

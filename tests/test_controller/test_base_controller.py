@@ -49,5 +49,5 @@ class TestVolumeStatus(unittest.TestCase):
                 self.assertTrue(vs.changed.is_set())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
