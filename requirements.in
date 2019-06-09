@@ -1,1 +1,3 @@
+aiorun
 python-socketio[asyncio_client]
+uvloop
